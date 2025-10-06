@@ -9,7 +9,7 @@ export default function MainLayout({
   return (
     <SidebarProvider defaultOpen={false}>
       <AppSidebar />
-      <main>{children}</main>
+      <main className="w-full">{children}</main>
     </SidebarProvider>
   );
 }

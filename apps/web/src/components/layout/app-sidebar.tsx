@@ -12,10 +12,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import Link from "next/link";
-
 import { MessagesSquare, Settings } from "lucide-react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ModeToggle } from "../theme/mode-toggle";
 
 export function AppSidebar() {
   const pathname = usePathname();
@@ -40,6 +40,11 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <ModeToggle />
+            </SidebarMenuButton>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton asChild isActive={pathname === "/settings"}>
               <Link href="/settings">

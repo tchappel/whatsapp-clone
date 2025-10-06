@@ -5,7 +5,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { LogoutButton } from "@/features/auth/components/logout-button";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -18,12 +17,11 @@ export default async function Home() {
   }
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold underline">WhatsApp Clone</h1>
+    <div className="w-xs h-screen bg-amber-200">
+      <h1 className="text-xl font-bold">WhatsApp Clone</h1>
       <p>Hello {data.user.email}</p>
       <Button variant="outline">Button</Button>
       <ModeToggle />
-      <LogoutButton />
       <Tooltip>
         <TooltipTrigger>Hover</TooltipTrigger>
         <TooltipContent>
