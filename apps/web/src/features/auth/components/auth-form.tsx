@@ -36,19 +36,19 @@ export function AuthForm({ mode }: AuthFormProps) {
         <div>
           <Label htmlFor="email">Email:</Label>
           <Input name="email" id="email" type="email" required />
-          <span>{result.validationErrors?.email?._errors?.[0]}</span>
+          <span>{result.validationErrors?.fieldErrors.email?.[0]}</span>
         </div>
 
         <div>
           <Label htmlFor="password">Password:</Label>
           <Input name="password" id="password" type="password" required />
-          <span>{result.validationErrors?.password?._errors?.[0]}</span>
+          <span>{result.validationErrors?.fieldErrors.password?.[0]}</span>
         </div>
         <SubmitButton className="w-full mt-6">
           {isSignup ? "Sign Up" : "Log In"}
         </SubmitButton>
       </form>
-      <p>{result.validationErrors?._errors?.[0]}</p>
+      <p>{result.validationErrors?.formErrors?.[0]}</p>
     </>
   );
 }

@@ -1,3 +1,5 @@
+/* this file is a Supabase “magic link / email verification callback” route in your Next.js App Router setup. */
+
 import { type EmailOtpType } from "@supabase/supabase-js";
 import { type NextRequest } from "next/server";
 
