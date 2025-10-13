@@ -1,4 +1,5 @@
 import { EditableProfileField } from "@/features/profiles/components/editable-profile-field";
+import { ProfileAvatar } from "@/features/profiles/components/profile-avatar";
 import {
   ProfileFieldContent,
   ProfileFieldItemTitle,
@@ -25,7 +26,7 @@ export default async function Profile() {
   return (
     <div className="h-screen w-full max-w-md px-8 pt-4">
       <h1 className="mb-6 text-xl font-semibold">Profile</h1>
-
+      <ProfileAvatar imageUrl={profile?.avatar_url ?? ""} />
       <ProfileFieldList>
         {/* Display Name */}
         <ProfileFieldListItem>
