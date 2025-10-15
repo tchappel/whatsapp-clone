@@ -3,7 +3,7 @@ import { SupabaseClient } from "@supabase/supabase-js";
 
 export type PublicProfile = Pick<
   Profile,
-  | "avatar_url"
+  | "avatar_path"
   | "display_name"
   | "id"
   | "is_online"
@@ -18,7 +18,7 @@ export async function getPublicProfile(
   const { data, error } = await supabase
     .from("profiles")
     .select(
-      "avatar_url, display_name, id, is_online, last_seen, status_message"
+      "avatar_path, display_name, id, is_online, last_seen, status_message"
     )
     .eq("id", id)
     .single();
