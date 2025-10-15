@@ -1,56 +1,42 @@
 "use server";
 
 import { authActionClient } from "@/lib/safe-action";
-import {
-  flattenValidationErrors,
-  returnValidationErrors,
-} from "next-safe-action";
+import { flattenValidationErrors } from "next-safe-action";
 import { z } from "zod";
 
-const profileFieldSchemas = {
-  display_name: z.string().min(1).max(50),
-  status_message: z.string().max(140),
-  avatar_url: z.string(),
-} as const;
-
-export type ProfileEditableField = keyof typeof profileFieldSchemas;
-
-const inputSchema = z.discriminatedUnion("key", [
+const updateProfileFieldInputSchema = z.discriminatedUnion("key", [
   z.object({
     key: z.literal("display_name"),
-    value: profileFieldSchemas.display_name,
+    value: z.string().min(1).max(50),
   }),
   z.object({
     key: z.literal("status_message"),
-    value: profileFieldSchemas.status_message,
+    value: z.string().max(140),
   }),
   z.object({
-    key: z.literal("avatar_url"),
-    value: profileFieldSchemas.avatar_url,
+    key: z.literal("avatar_path"),
+    value: z.string(),
   }),
 ]);
 
 export const updateProfileField = authActionClient
   .metadata({ actionName: "updateProfileField" })
-  .inputSchema(inputSchema, {
+  .inputSchema(updateProfileFieldInputSchema, {
     handleValidationErrorsShape: async (ve) => flattenValidationErrors(ve),
   })
   .action(async ({ parsedInput, ctx }) => {
     const { key, value } = parsedInput;
     const { supabase, userId } = ctx;
 
-    const { error } = await supabase
+    const { error: updateError } = await supabase
       .from("profiles")
       .update({ [key]: value })
       .eq("id", userId);
 
-    if (error) {
-      returnValidationErrors(inputSchema, {
-        _errors: [error.message || "Failed to update profile field."],
-      });
-    }
+    if (updateError) throw updateError;
 
     return {
+      success: true,
       value,
     };
   });
