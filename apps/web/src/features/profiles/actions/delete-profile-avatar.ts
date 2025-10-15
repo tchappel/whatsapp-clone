@@ -4,7 +4,7 @@ import { authActionClient } from "@/lib/safe-action";
 import { flattenValidationErrors } from "next-safe-action";
 import { z } from "zod";
 
-export const inputSchema = z.object({
+const inputSchema = z.object({
   filePath: z.string(),
 });
 

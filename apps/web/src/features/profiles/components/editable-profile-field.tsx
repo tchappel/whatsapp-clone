@@ -7,27 +7,30 @@ import {
   InputGroupInput,
 } from "@/components/forms/input-group";
 import { Button } from "@/components/ui/button";
+import { Profile } from "@repo/supabase/types";
 import { Check, Pencil } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { FormEventHandler, useEffect, useState } from "react";
-import {
-  ProfileEditableField,
-  updateProfileField,
-} from "../actions/update-profile-field";
+import { updateProfileField } from "../actions/update-profile-field";
 
-type EditableProfileFieldProps = {
-  initialValue?: string | null;
-  fieldKey: ProfileEditableField;
+type EditableProfileField = keyof Pick<
+  Profile,
+  "avatar_path" | "display_name" | "status_message"
+>;
+
+type EditableProfileFieldProps<K extends EditableProfileField> = {
+  fieldKey: K;
+  initialValue: Profile[K];
 };
 
-export function EditableProfileField({
+export function EditableProfileField<K extends EditableProfileField>({
   initialValue,
   fieldKey,
-}: EditableProfileFieldProps) {
+}: EditableProfileFieldProps<K>) {
   const [isEditing, setIsEditing] = useState(false);
   const { result, execute, isPending, hasErrored, hasSucceeded } =
     useAction(updateProfileField);
-  const [lastValidValue, setLastValidValue] = useState(initialValue ?? "");
+  const [lastValidValue, setLastValidValue] = useState(initialValue);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
@@ -53,7 +56,6 @@ export function EditableProfileField({
                 type="text"
                 name={fieldKey}
                 id={fieldKey}
-                defaultValue={lastValidValue}
                 autoFocus
                 disabled={isPending}
                 className="text-base md:text-base px-0"

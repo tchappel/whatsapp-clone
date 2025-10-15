@@ -12,7 +12,7 @@ const allowedTypes = [
   "image/heif",
 ];
 
-export const uploadProfileAvatarInputSchema = z.object({
+const uploadProfileAvatarInputSchema = z.object({
   file: z
     .file()
     .refine((file) => file.size <= 1024 * 1024, {

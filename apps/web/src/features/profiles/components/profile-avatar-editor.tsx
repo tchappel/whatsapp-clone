@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Image, Loader2, Trash2, Upload } from "lucide-react";
 import { ChangeEventHandler, useEffect, useRef, useState } from "react";
-import { ProfileAvatar, ProfileAvatarProps } from "./profile-avatar";
+import { ProfileAvatar } from "./profile-avatar";
 
 function usePreview(initialSrc?: string) {
   const [previewUrl, setPreviewUrl] = useState(initialSrc ?? "");
@@ -52,16 +52,18 @@ function usePreview(initialSrc?: string) {
 }
 
 type ProfileAvatarEditorProps = {
-  fallback?: ProfileAvatarProps["fallback"];
-  initialSrc?: ProfileAvatarProps["src"];
+  src?: string;
   loading?: boolean;
   onRemove?: () => void;
   onUpload?: (file: File) => void;
+  avatarPath?: string;
+  displayName?: string;
 };
 
 export function ProfileAvatarEditor({
-  fallback,
-  initialSrc,
+  src,
+  avatarPath,
+  displayName,
   loading = false,
   onRemove,
   onUpload,
@@ -70,7 +72,7 @@ export function ProfileAvatarEditor({
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const { previewUrl, createPreview, clearPreview } = usePreview(initialSrc);
+  const { previewUrl, createPreview, clearPreview } = usePreview(src);
 
   const handleFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const file = e.target.files?.[0];
@@ -89,10 +91,9 @@ export function ProfileAvatarEditor({
   };
 
   const handleRemoveClick = () => {
-    if (!previewUrl) return;
     clearPreview();
-    onRemove?.();
     setDropdownOpen(false);
+    onRemove?.();
   };
 
   const handleAvatarClick = () => {
@@ -126,7 +127,12 @@ export function ProfileAvatarEditor({
           onFocus={() => !loading && setIsInteractive(true)}
           onBlur={() => setIsInteractive(false)}
         >
-          <ProfileAvatar size="lg" src={previewUrl} fallback={fallback} />
+          <ProfileAvatar
+            size="lg"
+            src={previewUrl}
+            avatarPath={avatarPath}
+            displayName={displayName}
+          />
 
           {/* Interactive overlay (hover/focus/dropdown open) */}
           {(isInteractive || dropdownOpen) && !loading && (
@@ -164,10 +170,7 @@ export function ProfileAvatarEditor({
             <Upload className="w-4 h-4 mr-2" />
             Upload photo
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={handleRemoveClick}
-            disabled={loading || !previewUrl}
-          >
+          <DropdownMenuItem onClick={handleRemoveClick} disabled={loading}>
             <Trash2 className="w-4 h-4 mr-2" />
             Remove photo
           </DropdownMenuItem>
