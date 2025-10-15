@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Camera } from "lucide-react";
 
@@ -18,20 +19,26 @@ const profileAvatarVariants = cva(
   }
 );
 
-export type ProfileAvatarProps = {
-  src?: string;
-  fallback?: React.ReactNode;
-  className?: string;
-} & VariantProps<typeof profileAvatarVariants>;
+export type ProfileAvatarProps = React.ComponentProps<
+  typeof AvatarPrimitive.Root
+> &
+  VariantProps<typeof profileAvatarVariants> & {
+    src?: string;
+    fallback: React.ReactNode;
+  };
 
-export async function ProfileAvatar({
+export function ProfileAvatar({
   src,
   fallback,
   size,
   className,
+  ...props
 }: ProfileAvatarProps) {
   return (
-    <Avatar className={cn(profileAvatarVariants({ size }), className)}>
+    <Avatar
+      className={cn(profileAvatarVariants({ size }), className)}
+      {...props}
+    >
       <AvatarImage src={src} alt="profile image" />
       <AvatarFallback>{fallback ?? <Camera />}</AvatarFallback>
     </Avatar>
