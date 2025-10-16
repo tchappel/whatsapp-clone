@@ -426,7 +426,15 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      search_profiles: {
+        Args: { query: string }
+        Returns: {
+          avatar_path: string
+          display_name: string
+          id: string
+          similarity_score: number
+        }[]
+      }
     }
     Enums: {
       chat_role: "member" | "admin"
