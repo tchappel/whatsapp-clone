@@ -39,6 +39,221 @@ export type Database = {
   }
   public: {
     Tables: {
+      chat_participants: {
+        Row: {
+          chat_id: string
+          deleted_at: string | null
+          id: string
+          is_deleted: boolean
+          joined_at: string
+          last_visible_message_created_at: string | null
+          role: Database["public"]["Enums"]["chat_role"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          chat_id: string
+          deleted_at?: string | null
+          id?: string
+          is_deleted?: boolean
+          joined_at?: string
+          last_visible_message_created_at?: string | null
+          role?: Database["public"]["Enums"]["chat_role"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          chat_id?: string
+          deleted_at?: string | null
+          id?: string
+          is_deleted?: boolean
+          joined_at?: string
+          last_visible_message_created_at?: string | null
+          role?: Database["public"]["Enums"]["chat_role"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_participants_chat_id_fkey"
+            columns: ["chat_id"]
+            isOneToOne: false
+            referencedRelation: "chats"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chats: {
+        Row: {
+          chat_type: Database["public"]["Enums"]["chat_type"]
+          created_at: string
+          created_by: string
+          id: string
+          metadata: Json | null
+          updated_at: string
+        }
+        Insert: {
+          chat_type?: Database["public"]["Enums"]["chat_type"]
+          created_at?: string
+          created_by: string
+          id?: string
+          metadata?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          chat_type?: Database["public"]["Enums"]["chat_type"]
+          created_at?: string
+          created_by?: string
+          id?: string
+          metadata?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      contacts: {
+        Row: {
+          alias: string
+          contact_id: string
+          created_at: string
+          id: string
+          owner_id: string
+          updated_at: string
+        }
+        Insert: {
+          alias?: string
+          contact_id: string
+          created_at?: string
+          id?: string
+          owner_id: string
+          updated_at?: string
+        }
+        Update: {
+          alias?: string
+          contact_id?: string
+          created_at?: string
+          id?: string
+          owner_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      message_statuses: {
+        Row: {
+          id: string
+          message_id: string
+          recipient_id: string
+          status: Database["public"]["Enums"]["message_delivery_status"]
+          status_updated_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          message_id: string
+          recipient_id: string
+          status?: Database["public"]["Enums"]["message_delivery_status"]
+          status_updated_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          message_id?: string
+          recipient_id?: string
+          status?: Database["public"]["Enums"]["message_delivery_status"]
+          status_updated_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_statuses_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "chat_last_message"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "message_statuses_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "message_statuses_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "visible_messages_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          chat_id: string
+          client_message_id: string | null
+          content: string | null
+          content_json: Json | null
+          created_at: string
+          id: string
+          is_edited: boolean
+          reply_to: string | null
+          sender_id: string
+          updated_at: string
+        }
+        Insert: {
+          chat_id: string
+          client_message_id?: string | null
+          content?: string | null
+          content_json?: Json | null
+          created_at?: string
+          id?: string
+          is_edited?: boolean
+          reply_to?: string | null
+          sender_id: string
+          updated_at?: string
+        }
+        Update: {
+          chat_id?: string
+          client_message_id?: string | null
+          content?: string | null
+          content_json?: Json | null
+          created_at?: string
+          id?: string
+          is_edited?: boolean
+          reply_to?: string | null
+          sender_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_chat_id_fkey"
+            columns: ["chat_id"]
+            isOneToOne: false
+            referencedRelation: "chats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_reply_to_fkey"
+            columns: ["reply_to"]
+            isOneToOne: false
+            referencedRelation: "chat_last_message"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_reply_to_fkey"
+            columns: ["reply_to"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_reply_to_fkey"
+            columns: ["reply_to"]
+            isOneToOne: false
+            referencedRelation: "visible_messages_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_path: string | null
@@ -48,6 +263,7 @@ export type Database = {
           is_online: boolean
           last_seen: string
           status_message: string
+          updated_at: string
         }
         Insert: {
           avatar_path?: string | null
@@ -57,6 +273,7 @@ export type Database = {
           is_online?: boolean
           last_seen?: string
           status_message?: string
+          updated_at?: string
         }
         Update: {
           avatar_path?: string | null
@@ -66,18 +283,155 @@ export type Database = {
           is_online?: boolean
           last_seen?: string
           status_message?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      storage_cleanup_queue: {
+        Row: {
+          bucket: string
+          created_at: string
+          file_path: string
+          id: string
+          processed: boolean
+        }
+        Insert: {
+          bucket: string
+          created_at?: string
+          file_path: string
+          id?: string
+          processed?: boolean
+        }
+        Update: {
+          bucket?: string
+          created_at?: string
+          file_path?: string
+          id?: string
+          processed?: boolean
         }
         Relationships: []
       }
     }
     Views: {
-      [_ in never]: never
+      chat_last_message: {
+        Row: {
+          chat_id: string | null
+          client_message_id: string | null
+          content: string | null
+          content_json: Json | null
+          created_at: string | null
+          id: string | null
+          is_edited: boolean | null
+          reply_to: string | null
+          sender_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_chat_id_fkey"
+            columns: ["chat_id"]
+            isOneToOne: false
+            referencedRelation: "chats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_reply_to_fkey"
+            columns: ["reply_to"]
+            isOneToOne: false
+            referencedRelation: "chat_last_message"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_reply_to_fkey"
+            columns: ["reply_to"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_reply_to_fkey"
+            columns: ["reply_to"]
+            isOneToOne: false
+            referencedRelation: "visible_messages_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      visible_messages_view: {
+        Row: {
+          chat_id: string | null
+          client_message_id: string | null
+          content: string | null
+          content_json: Json | null
+          created_at: string | null
+          id: string | null
+          is_edited: boolean | null
+          reply_to: string | null
+          sender_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          chat_id?: string | null
+          client_message_id?: string | null
+          content?: string | null
+          content_json?: Json | null
+          created_at?: string | null
+          id?: string | null
+          is_edited?: boolean | null
+          reply_to?: string | null
+          sender_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          chat_id?: string | null
+          client_message_id?: string | null
+          content?: string | null
+          content_json?: Json | null
+          created_at?: string | null
+          id?: string | null
+          is_edited?: boolean | null
+          reply_to?: string | null
+          sender_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_chat_id_fkey"
+            columns: ["chat_id"]
+            isOneToOne: false
+            referencedRelation: "chats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_reply_to_fkey"
+            columns: ["reply_to"]
+            isOneToOne: false
+            referencedRelation: "chat_last_message"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_reply_to_fkey"
+            columns: ["reply_to"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_reply_to_fkey"
+            columns: ["reply_to"]
+            isOneToOne: false
+            referencedRelation: "visible_messages_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      chat_role: "member" | "admin"
+      chat_type: "direct" | "group"
+      message_delivery_status: "sent" | "delivered" | "seen"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -207,6 +561,10 @@ export const Constants = {
     Enums: {},
   },
   public: {
-    Enums: {},
+    Enums: {
+      chat_role: ["member", "admin"],
+      chat_type: ["direct", "group"],
+      message_delivery_status: ["sent", "delivered", "seen"],
+    },
   },
 } as const
